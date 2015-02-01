@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">GOPro HUD</string>
+    <string name="app_subname">Captura sensaciones</string>
+    <string name="action_settings">Configuración</string>
+    <string name="drawer_open">Se abrio el menu lateral</string>
+    <string name="drawer_close">Se cerro el menu lateral</string>
+
+    <!-- Nombres de los items -->
+    <string-array name="nav_drawer_items">
+        <item >Control</item>
+        <item >Opciones</item>
+        <item >Galeria</item>
+        <item >Ayuda</item>
+    </string-array>
+
+    <!-- Iconos de los items -->
+    <array name="nav_drawer_icons">
+        <item>@drawable/ic_av_videocam</item>
+        <item>@drawable/ic_action_settings</item>
+        <item>@drawable/ic_action_videogallery</item>
+        <item>@drawable/ic_help</item>
+    </array>
+
+    <!-- Content Description -->
+    <string name="desc_list_item_icon">Item Icon</string>
+
+</resources>
