@@ -19,7 +19,8 @@
         android:layout_width="match_parent"
         android:layout_height="240dp"
         android:id="@+id/videoView"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:background="@android:color/darker_gray" />
 
     <TableLayout
         android:layout_width="match_parent"
@@ -57,7 +58,11 @@
                 android:layout_margin="@dimen/ic_margen"
                 android:scaleType="fitCenter" />
 
-
+            <Spinner
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/spinner_gopro_mod"
+                android:layout_column="2" />
 
 
         </TableRow>
