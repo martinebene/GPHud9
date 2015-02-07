@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1"
+    android:background="@android:color/background_dark">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/txt_titulo_preview"
+        android:id="@+id/tv_titulo_control"
+        android:layout_gravity="center_horizontal"
+        style="@android:style/TextAppearance.DeviceDefault.Large.Inverse"
+        android:textStyle="bold|italic" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="@dimen/ic_status_control_width"
+                android:layout_height="@dimen/ic_status_control_height"
+                android:id="@+id/imageView"
+                android:src="@drawable/ic_action_wifi" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/status_sinconexion"
+                android:id="@+id/textView"
+                android:textColor="@android:color/holo_blue_light" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|end" >
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:layout_marginRight="@dimen/ic_status_control_margen"
+                android:layout_marginLeft="@dimen/ic_status_control_margen" >
+
+                <ImageView
+                    android:layout_width="@dimen/ic_status_control_width"
+                    android:layout_height="@dimen/ic_status_control_height"
+                    android:id="@+id/imageView4"
+                    android:src="@drawable/ic_device_gps_not_fixed" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center|end"
+                android:layout_marginRight="@dimen/ic_status_control_margen"
+                android:layout_marginLeft="@dimen/ic_status_control_margen">
+
+                <ImageView
+                    android:layout_width="@dimen/ic_status_control_width"
+                    android:layout_height="@dimen/ic_status_control_height"
+                    android:id="@+id/imageView3"
+                    android:src="@drawable/ic_signal_camara" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ex_porcentaje"
+                    android:id="@+id/textView3"
+                    android:textColor="@android:color/holo_blue_light" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center|end"
+                android:layout_marginLeft="@dimen/ic_status_control_margen"
+                android:layout_marginRight="@dimen/ic_status_control_margen">
+
+                <ImageView
+                    android:layout_width="@dimen/ic_status_control_width"
+                    android:layout_height="@dimen/ic_status_control_height"
+                    android:id="@+id/imageView2"
+                    android:src="@drawable/ic_bateria_camara" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ex_porcentaje"
+                    android:id="@+id/textView2"
+                    android:textColor="@android:color/holo_blue_light" />
+            </LinearLayout>
+        </TableRow>
+
+    </LinearLayout>
+
+    <VideoView
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:id="@+id/videoView"
+        android:layout_gravity="center_horizontal"
+        android:background="@android:color/darker_gray" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false">
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/controles_cam" >
+
+                <ImageButton
+                    android:layout_width="@dimen/ic_control_width"
+                    android:layout_height="@dimen/ic_control_height"
+                    android:id="@+id/ib_rec"
+                    android:src="@drawable/ic_action_record"
+                    android:clickable="true"
+                    android:background="@drawable/ic_icono_bsckground_2"
+                    android:scaleType="center"
+                    android:layout_margin="@dimen/ic_control_margen"/>
+
+                <ImageButton
+                    android:layout_width="@dimen/ic_control_width"
+                    android:layout_height="@dimen/ic_control_height"
+                    android:id="@+id/ib_stop"
+                    android:src="@drawable/ic_action_playback_stop"
+                    android:clickable="true"
+                    android:contentDescription="boton de control grabacion"
+                    android:background="@drawable/ic_icono_bsckground_2"
+                    android:scaleType="center"
+                    android:layout_margin="@dimen/ic_control_margen" />
+
+            </TableRow>
+        </TableLayout>
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/controles_cam2"
+                android:gravity="end">
+                <Spinner
+                    android:layout_width="@dimen/ic_control_width"
+                    android:layout_height="@dimen/ic_control_height"
+                    android:id="@+id/spinner_gopro_mod"
+                    android:background="@drawable/ic_spinner_drop"
+                    android:spinnerMode="dropdown"
+                    android:layout_margin="@dimen/ic_control_margen" />
+
+                <ImageButton
+                    android:layout_width="@dimen/ic_control_width"
+                    android:layout_height="@dimen/ic_control_height"
+                    android:id="@+id/ib_OnOff"
+                    android:src="@drawable/ic_action_io"
+                    android:clickable="true"
+                    android:contentDescription="boton de control grabacion"
+                    android:background="@android:color/transparent"
+                    android:scaleType="centerCrop"
+                    android:layout_margin="@dimen/ic_control_margen" />
+
+
+            </TableRow>
+
+
+
+
+        </TableLayout>
+    </LinearLayout>
+
+</LinearLayout>

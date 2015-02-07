@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/icono"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
+        android:layout_width="@dimen/ic_control_spinner_width"
+        android:layout_height="@dimen/ic_control_spinner_height"
         android:contentDescription="@string/icono"
         />
 

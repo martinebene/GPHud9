@@ -4,5 +4,13 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="ic_control_min_width">76dp</dimen>
     <dimen name="ic_control_min_height">76dp</dimen>
+    <dimen name="ic_control_width">60dp</dimen>
+    <dimen name="ic_control_height">60dp</dimen>
+    <dimen name="ic_control_spinner_width">40dp</dimen>
+    <dimen name="ic_control_spinner_height">40dp</dimen>
     <dimen name="ic_margen">1dp</dimen>
+    <dimen name="ic_control_margen">4dp</dimen>
+    <dimen name="ic_status_control_width">28dp</dimen>
+    <dimen name="ic_status_control_height">28dp</dimen>
+    <dimen name="ic_status_control_margen">5dp</dimen>
 </resources>

@@ -6,11 +6,12 @@ android:layout_height="wrap_content"
 android:background="@android:color/transparent"
 android:padding="1dp">
 
-<ImageView
-    android:id="@+id/icono_spinner"
-    android:layout_width="@dimen/ic_control_min_width"
-    android:layout_height="@dimen/ic_control_min_height"
-    android:contentDescription="@string/icono"/>
+    <ImageView
+        android:id="@+id/icono"
+        android:layout_width="@dimen/ic_control_width"
+        android:layout_height="@dimen/ic_control_height"
+        android:contentDescription="@string/icono"/>
+
 
 </RelativeLayout>
 
