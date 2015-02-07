@@ -183,4 +183,17 @@
         </TableLayout>
     </LinearLayout>
 
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:id="@+id/tf_output_console"
+        android:layout_margin="@dimen/tf_output_conolse_margen"
+        android:layout_gravity="center"
+        android:background="@color/list_background"
+        android:textColor="@color/list_item_title"
+        android:text="Consola:"
+        android:gravity="start" />
+
 </LinearLayout>

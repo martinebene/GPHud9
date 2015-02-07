@@ -11,7 +11,7 @@
         <item>
             <shape>
                 <solid
-                    android:color="@android:color/white" />
+                    android:color="@color/list_background" />
             </shape>
         </item>
 

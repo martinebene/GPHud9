@@ -10,7 +10,8 @@
     <!-- Nombres de los items -->
     <string-array name="nav_drawer_items">
         <item >Control</item>
-        <item >Opciones</item>
+        <item >Opciones GoPro</item>
+        <item >Configuracion</item>
         <item >Galeria</item>
         <item >Ayuda</item>
     </string-array>
@@ -18,6 +19,7 @@
     <!-- Iconos de los items -->
     <array name="nav_drawer_icons">
         <item>@drawable/ic_av_videocam</item>
+        <item>@drawable/ic_ic_action_config_camera</item>
         <item>@drawable/ic_action_settings</item>
         <item>@drawable/ic_action_videogallery</item>
         <item>@drawable/ic_help</item>

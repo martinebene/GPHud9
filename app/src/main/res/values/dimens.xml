@@ -13,4 +13,5 @@
     <dimen name="ic_status_control_width">28dp</dimen>
     <dimen name="ic_status_control_height">28dp</dimen>
     <dimen name="ic_status_control_margen">5dp</dimen>
+    <dimen name="tf_output_conolse_margen">20dp</dimen>
 </resources>

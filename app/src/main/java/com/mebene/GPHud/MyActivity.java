@@ -57,12 +57,14 @@ public class MyActivity extends Activity {
         // agregar un nuevo item al menu deslizante
         // Control
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[0], navMenuIcons.getResourceId(0, -1), true, "StdB"));
+        // Configuracion Gopro
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(1, -1), true, "S/C"));
         // Opciones
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));
-        // Galeria
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
-        // Ayuda
+        // Galeria
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));
+        // Ayuda
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(4, -1)));
 
         // Recycle the typed array
         navMenuIcons.recycle();
@@ -157,15 +159,17 @@ public class MyActivity extends Activity {
                 fragment = new Fm_control();
                 break;
             case 1:
-                fragment = new Fm_opciones();
+                fragment = new Fm_goproConf();
                 break;
             case 2:
-                fragment = new Fm_galeria();
+                fragment = new Fm_opciones();
                 break;
             case 3:
+                fragment = new Fm_galeria();
+                break;
+            case 4:
                 fragment = new Fm_ayuda();
                 break;
-
             default:
                 break;
         }
