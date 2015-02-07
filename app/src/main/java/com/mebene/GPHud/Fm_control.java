@@ -21,12 +21,20 @@ public class Fm_control extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.seccion1, container, false);
+        View rootView = inflater.inflate(R.layout.fm_control_layout, container, false);
 
-        List<GoproMode> items = new ArrayList<GoproMode>(3);
-        items.add(new GoproMode(getString(R.string.app_name), R.drawable.ic_action_android));
-        items.add(new GoproMode(getString(R.string.app_subname), R.drawable.ic_action_attachment));
-        items.add(new GoproMode(getString(R.string.app_name), R.drawable.ic_action_bluetooth));
+
+        return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+
+        List<GoproMode> items = new ArrayList<GoproMode>(4);
+        items.add(new GoproMode(getString(R.string.gpMode_video), R.drawable.ic_action_video));
+        items.add(new GoproMode(getString(R.string.gpMode_foto), R.drawable.ic_action_camera));
+        items.add(new GoproMode(getString(R.string.gpMode_rafaga), R.drawable.ic_foto_rafaga));
+        items.add(new GoproMode(getString(R.string.gpMode_fotoTemp), R.drawable.ic_foto_temp));
 
         spinner = (Spinner) getView().findViewById(R.id.spinner_gopro_mod);
 
@@ -43,12 +51,14 @@ public class Fm_control extends Fragment {
 
             }
 
-    });
-        return rootView;
+        });
+
+
+
+        super.onActivityCreated(savedInstanceState);
     }
 
-
-        public class GoproMode
+    public class GoproMode
         {
             private String name;
 

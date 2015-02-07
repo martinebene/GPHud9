@@ -6,15 +6,6 @@
     android:weightSum="1"
     android:background="@android:color/background_dark">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/txt_titulo_preview"
-        android:id="@+id/tv_titulo_control"
-        android:layout_gravity="center_horizontal"
-        style="@android:style/TextAppearance.DeviceDefault.Large.Inverse"
-        android:textStyle="bold|italic" />
-
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
@@ -136,10 +127,11 @@
                     android:id="@+id/ib_rec"
                     android:src="@drawable/ic_action_record"
                     android:clickable="true"
-                    android:background="@drawable/ic_icono_bsckground_2"
+                    android:background="@drawable/button_bg_selector"
                     android:scaleType="center"
                     android:layout_margin="@dimen/ic_control_margen"/>
 
+                <!--android:background="@drawable/ic_icono_bsckground_2"-->
                 <ImageButton
                     android:layout_width="@dimen/ic_control_width"
                     android:layout_height="@dimen/ic_control_height"
@@ -147,8 +139,7 @@
                     android:src="@drawable/ic_action_playback_stop"
                     android:clickable="true"
                     android:contentDescription="boton de control grabacion"
-                    android:background="@drawable/ic_icono_bsckground_2"
-                    android:scaleType="center"
+                    android:background="@drawable/button_bg_selector"
                     android:layout_margin="@dimen/ic_control_margen" />
 
             </TableRow>
@@ -168,7 +159,7 @@
                     android:layout_width="@dimen/ic_control_width"
                     android:layout_height="@dimen/ic_control_height"
                     android:id="@+id/spinner_gopro_mod"
-                    android:background="@drawable/ic_spinner_drop"
+                    android:background="@drawable/spinner_button_selector"
                     android:spinnerMode="dropdown"
                     android:layout_margin="@dimen/ic_control_margen" />
 
@@ -179,7 +170,7 @@
                     android:src="@drawable/ic_action_io"
                     android:clickable="true"
                     android:contentDescription="boton de control grabacion"
-                    android:background="@android:color/transparent"
+                    android:background="@drawable/button_bg_selector_color"
                     android:scaleType="centerCrop"
                     android:layout_margin="@dimen/ic_control_margen" />
 

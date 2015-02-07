@@ -36,8 +36,9 @@ private Context context;
         if (convertView == null)
         {
             convertView = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.spinner_selected_item_icon,null);
+
         }
-        ((TextView) convertView.findViewById(R.id.texto)).setText(datos.get(position).getNombre());
+        //((TextView) convertView.findViewById(R.id.texto)).setText(datos.get(position).getNombre());
         ((ImageView) convertView.findViewById(R.id.icono)).setBackgroundResource(datos.get(position).getIcono());
 
         return convertView;
