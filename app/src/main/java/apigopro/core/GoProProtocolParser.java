@@ -48,6 +48,14 @@ public class GoProProtocolParser
 
     }
 
+    public short extractUnsignedByte()
+    {
+        bb = ByteBuffer.allocate(2);
+        padBuffer(bb, 1);
+        bb.put(extractByte());
+        return bb.getShort(0);
+    }
+
     public String extractFixedLengthString(int i)
     {
         byte abyte0[] = new byte[i];
@@ -90,13 +98,7 @@ public class GoProProtocolParser
             return extractFixedLengthString(byte0);
     }
 
-    public short extractUnsignedByte()
-    {
-        bb = ByteBuffer.allocate(2);
-        padBuffer(bb, 1);
-        bb.put(extractByte());
-        return bb.getShort(0);
-    }
+
 
     public int getPosition()
     {

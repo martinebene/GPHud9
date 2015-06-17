@@ -861,6 +861,82 @@ public class CamFields
         mWhiteBalance = i;
     }
 
+    @Override
+    public String toString() {
+        return "CamFields{" +
+                "audioinput=" + audioinput +
+                ", autopower=" + autopower +
+                ", battery=" + battery +
+                ", beepsound=" + beepsound +
+                ", buildversion=" + buildversion +
+                ", busy=" + busy +
+                ", camname='" + camname + '\'' +
+                ", exposure=" + exposure +
+                ", fov='" + fov + '\'' +
+                ", ip='" + ip + '\'' +
+                ", ledblink=" + ledblink +
+                ", livefeed=" + livefeed +
+                ", livepreview=" + livepreview +
+                ", locate=" + locate +
+                ", mBombieAttached=" + mBombieAttached +
+                ", mBracketingMode=" + mBracketingMode +
+                ", mBroadcastSettings=" + mBroadcastSettings +
+                ", mBroadcasting=" + mBroadcasting +
+                ", mBurstMode=" + mBurstMode +
+                ", mCameraBusy=" + mCameraBusy +
+                ", mContinuousShot=" + mContinuousShot +
+                ", mExternalBatteryLevelPercent=" + mExternalBatteryLevelPercent +
+                ", mFieldOfView=" + mFieldOfView +
+                ", mFramesPerSecond=" + mFramesPerSecond +
+                ", mHlsSegmentSize=" + mHlsSegmentSize +
+                ", mLcdAttached=" + mLcdAttached +
+                ", mLcdBrightness=" + mLcdBrightness +
+                ", mLcdSleepTimer=" + mLcdSleepTimer +
+                ", mLcdVolume=" + mLcdVolume +
+                ", mLocateActive=" + mLocateActive +
+                ", mLoopingMode=" + mLoopingMode +
+                ", mPhotoInVideo=" + mPhotoInVideo +
+                ", mPreviewActive=" + mPreviewActive +
+                ", mPreviewAvailable=" + mPreviewAvailable +
+                ", mProtuneEnabled=" + mProtuneEnabled +
+                ", mSettingsBag=" + mSettingsBag +
+                ", mSlideshowSetting=" + mSlideshowSetting +
+                ", mTimeLapseStyle=" + mTimeLapseStyle +
+                ", mUploading=" + mUploading +
+                ", mVideoLoopCounter=" + mVideoLoopCounter +
+                ", mVideoResolutionMav=" + mVideoResolutionMav +
+                ", mWhiteBalance=" + mWhiteBalance +
+                ", majorversion=" + majorversion +
+                ", microphone=" + microphone +
+                ", minorversion=" + minorversion +
+                ", mode=" + mode +
+                ", model=" + model +
+                ", ntsc=" + ntsc +
+                ", ondefault=" + ondefault +
+                ", onebutton=" + onebutton +
+                ", onscreen=" + onscreen +
+                ", photoResolution=" + photoResolution +
+                ", photos_available=" + photos_available +
+                ", photos_oncard=" + photos_oncard +
+                ", playbackpos=" + playbackpos +
+                ", playbackstart='" + playbackstart + '\'' +
+                ", playmode=" + playmode +
+                ", port=" + port +
+                ", previewValid=" + previewValid +
+                ", protocol=" + protocol +
+                ", protuneSetting=" + protuneSetting +
+                ", shutter=" + shutter +
+                ", timeLapse=" + timeLapse +
+                ", timelaspe='" + timelaspe + '\'' +
+                ", updown=" + updown +
+                ", usbmode=" + usbmode +
+                ", version='" + version + '\'' +
+                ", video_minavailable=" + video_minavailable +
+                ", video_oncard=" + video_oncard +
+                ", vidres=" + vidres +
+                '}';
+    }
+
     private static final long serialVersionUID = 0xd2ff3210edbf2799L;
     private int audioinput;
     private int autopower;

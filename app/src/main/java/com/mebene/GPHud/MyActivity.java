@@ -3,22 +3,36 @@ package com.mebene.GPHud;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
+import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import apigopro.core.GoProHelper;
+import apigopro.core.model.CamFields;
 
 
 public class MyActivity extends Activity {
+    private static final long TIEMPO_RECONEXION = 5000;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -36,10 +50,15 @@ public class MyActivity extends Activity {
     private ArrayList<NavDrawerItem> navDrawerItems;
     private NavDrawerListAdapter adapter;
 
+    public GoProHelper gp_helper;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my);
+
+        wifiStartUp();
 
         mDrawerTitle = getString(R.string.app_subname);
         mTitle = getTitle();
@@ -103,6 +122,55 @@ public class MyActivity extends Activity {
             displayView(0);
         }
     }
+
+    private void wifiStartUp() {
+
+        // Comprobamos si la wifi está activada o no
+        WifiManager wifiMan = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+
+        if (!wifiMan.isWifiEnabled()) {
+            AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+            dialog.setTitle("Sin Conexion");
+            dialog.setMessage("La conexion WiFi no se encuentra activada");
+            dialog.setCancelable(false);
+            dialog.setPositiveButton("Activar WiFi", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent i = new Intent(Settings.ACTION_WIFI_SETTINGS);
+                    /*Log.i("tag", "antes del intent wifi");
+                    startActivity(i);
+                    Log.i("tag", "despues 1 del intent wifi");
+                    try {
+                        Thread.sleep(TIEMPO_RECONEXION);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    Log.i("tag", "despues 2 del intent wifi");
+                    wifiStartUp();*/
+                }
+            });
+            dialog.setNegativeButton("Continuar sin conexion", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            dialog.show();
+        }
+
+
+        //constructor sin password
+        gp_helper = new GoProHelper();
+        String SsId = null;
+        try {
+            SsId = gp_helper.getBackPackInfo().getSSID();
+            Log.i("tag", "sSID: "+SsId +"\n");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+            }
+
 
     /**
      * Slide menu item click listener

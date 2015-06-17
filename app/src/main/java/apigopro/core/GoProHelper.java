@@ -1,7 +1,11 @@
 package apigopro.core;
 
+import android.app.AlertDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
+
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -32,11 +36,12 @@ import apigopro.core.model.BacPacStatus;
 import apigopro.core.model.BackPack;
 import apigopro.core.model.CamFields;
 
+
 public class GoProHelper {
 
 	public static final boolean LOGGING_ENABLED = false;
-    public static final int TIMEOUT = 10000;
-    public static final int PASO_TIMEOUT = 10;
+    public static final int TIMEOUT = 4000;
+    public static final int PASO_TIMEOUT = 1000;
 	private final DefaultHttpClient mClient = newInstance();
 	private String mCameraAddress = null;
 	private String ipAddress;
@@ -52,11 +57,9 @@ public class GoProHelper {
 /*  Constructores  */
 /*******************/
 
-    public GoProHelper() {
-    }
 
     public GoProHelper(String ipAddress, Integer port, String password) {
-        this();
+        //this();
         this.setIpAddress(ipAddress);
         this.setPort(port);
         this.setPassword(password);
@@ -65,6 +68,26 @@ public class GoProHelper {
         System.out.println("Helper creado\n");
 
     }
+
+    public GoProHelper(String ipAddress, Integer port) {
+        //this();
+        this.setIpAddress(ipAddress);
+        this.setPort(port);
+        this.setPassword("");
+        // this.mCamera = paramGoProCamera;
+        this.mCameraAddress = ("http://" + ipAddress + ":" + port);
+        System.out.println("Helper sin pwd creado\n");
+    }
+
+    public GoProHelper() {
+        this.setIpAddress("10.5.5.9");
+        this.setPort(80);
+        this.mCameraAddress = ("http://" + ipAddress + ":" + port);
+        this.setPassword(this.getBacPacPassword());
+        // this.mCamera = paramGoProCamera;
+        System.out.println("Helper sin inputs, con pass: "+this.getPassword()+"\n");
+    }
+
 
 
 /*********************/
@@ -99,8 +122,55 @@ public class GoProHelper {
 
     }
 
+/*
+    public boolean isConected() {
+
+        String linea ="";
+
+        try {
+            linea = getBacPacPassword();
+            linea = linea + "   " + getBackPackInfo().getSSID();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (res != null){
+            Log.i("tag","Prueba de getpass con res = "+ linea +"\n");
+            return true;
+        }
+        else
+            return false;
+    }
+*/
+
     private byte[] sendGET(final String paramString) {
 
+        res = null;
+        Thread thr = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //Enviamos el texto escrito a la funcion
+                httpGetConection(paramString);
+            }
+        });
+        //Arrancamos el Hilo
+        thr.start();
+
+        for (int i=1; (res == null)  && (i < TIMEOUT); i=(i+PASO_TIMEOUT)){
+            Log.i("tag","En espera hilo nuevo " + i + " milisegundos\n");
+            try {
+                Thread.sleep(PASO_TIMEOUT);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        return res;
+
+
+
+        /*
         res = null;
         new AsynConection().execute(paramString);
 
@@ -115,7 +185,7 @@ public class GoProHelper {
         }
 
         return res;
-
+*/
 /*
         try {
         Log.i("tag", "en sendget simple antes de sendget con mClient\n");Thread.sleep(1000);
@@ -219,6 +289,37 @@ public class GoProHelper {
     }
 
 
+    public byte[] httpGetConection(String url){
+        try {
+            //Log.i("tag", "en sendget simple antes de sendget con mClient: + ( "+ arg0[0] +")\n");
+            InputStream data = null;
+            long j=0;
+            HttpClient client = new DefaultHttpClient();
+            HttpGet get = new HttpGet(url);
+            try {
+                HttpResponse response = client.execute(get);
+                data = response.getEntity().getContent();
+                j = response.getEntity().getContentLength();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+/*                if (data == null){
+                    Log.i("tag","En sendget 6 data null\n");}
+                else{
+                    Log.i("tag","En sendget 6 data ok\n");}*/
+
+            res = getBytesFromInputStream(data, j);
+
+            Log.i("hilo nuevo", "despues de hacer HttpGet: arraylenght: " + res.length);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     private class AsynConection extends AsyncTask {
 
@@ -246,7 +347,9 @@ public class GoProHelper {
                     data = response.getEntity().getContent();
                     j = response.getEntity().getContentLength();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.i("tag", "parece que no respondio el GET en doinbackground: + ( "+ arg0[0] +")\n");
+                    return null;
+                    //e.printStackTrace();
                 }
 
 /*                if (data == null){
@@ -256,7 +359,7 @@ public class GoProHelper {
 
                    res = getBytesFromInputStream(data, j);
 
-                Log.i("tag", "despues de hacer el doinback: arraylenght\n" + res.length);
+                Log.i("tag", "despues de hacer el doinback: arraylenght:" + res.length);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -290,14 +393,16 @@ public class GoProHelper {
         return bytes;*/
         ByteArrayOutputStream localByteArrayOutputStream = new ByteArrayOutputStream();
         byte[] arrayOfByte = new byte[(int)j];
-        while (true) {
-            if (is.read(arrayOfByte, 0, arrayOfByte.length) == -1) {
-                localByteArrayOutputStream.flush();
-                return localByteArrayOutputStream.toByteArray();
-            }
-            localByteArrayOutputStream.write(arrayOfByte, 0, arrayOfByte.length);
+        if(is != null) {
+            while (true) {
+                if (is.read(arrayOfByte, 0, arrayOfByte.length) == -1) {
+                    localByteArrayOutputStream.flush();
+                    return localByteArrayOutputStream.toByteArray();
+                }
+                localByteArrayOutputStream.write(arrayOfByte, 0, arrayOfByte.length);
 
-        }
+            }
+        }else   return null;
     }
 
     public DefaultHttpClient newInstance() {
@@ -389,7 +494,7 @@ public class GoProHelper {
 /*************/
 
     public String getCameraNameCN() {
-    String str = this.getIpAddress();
+    String str = null;
     byte[] arrayOfByte;
     try {
         arrayOfByte = sendGET(this.mCameraAddress + Operations.CAMERA_CN
@@ -435,9 +540,13 @@ public class GoProHelper {
         try {
             //Log.i("tag", "antes de hacer el sendget\n");Thread.sleep(1000);
             byte[] arrayOfByte = sendGET(this.mCameraAddress + "/camera/se" + "?t=" + this.getToken());
-            Thread.sleep(3000);
-            if (arrayOfByte == null)
-                Log.i("tag", "array nulo\n");Thread.sleep(1000);
+            //Thread.sleep(3000);
+            if (arrayOfByte == null) {
+                Log.i("tag", "array nulo\n");
+                return null;
+            }
+
+            //Thread.sleep(1000);
 
             //Log.i("tag", "despues de hacer el sendget: arraylenght\n" + arrayOfByte.length);Thread.sleep(1000);
 
@@ -548,34 +657,26 @@ public class GoProHelper {
         try {
             byte[] arrayOfByte = sendGET("http://" + this.getIpAddress()
                     + Operations.BACPAC_CV);
+            Log.i("tag", "En getBackPackInfo con array lenght:"+ arrayOfByte.length +"\n");
             localGoProProtocolParser = new GoProProtocolParser(arrayOfByte);
             if (localGoProProtocolParser.extractResultCode() != GoProProtocolParser.RESULT_IS_OK) {
                 return null;
             }
         } catch (Exception localException) {
+            localException.printStackTrace();
             throw new Exception("Fail to get backpack info", localException);
         }
-        localBackPack
-                .setVersion(localGoProProtocolParser.extractUnsignedByte());
+        localBackPack.setVersion(localGoProProtocolParser.extractUnsignedByte());
         localBackPack.setModel(localGoProProtocolParser.extractUnsignedByte());
-        localBackPack.setId(localGoProProtocolParser
-                .extractFixedLengthString(2));
-        localBackPack.setBootLoaderMajor(localGoProProtocolParser
-                .extractUnsignedByte());
-        localBackPack.setBootLoaderMinor(localGoProProtocolParser
-                .extractUnsignedByte());
-        localBackPack.setBootLoaderBuild(localGoProProtocolParser
-                .extractUnsignedByte());
-        localBackPack.setRevision(localGoProProtocolParser
-                .extractUnsignedByte());
-        localBackPack.setMajorversion(localGoProProtocolParser
-                .extractUnsignedByte());
-        localBackPack.setMinorversion(localGoProProtocolParser
-                .extractUnsignedByte());
-        localBackPack.setBuildversion(localGoProProtocolParser
-                .extractUnsignedByte());
-        localBackPack.setWifimac(localGoProProtocolParser
-                .extractFixedLengthString(6));
+        localBackPack.setId(localGoProProtocolParser.extractFixedLengthString(2));
+        localBackPack.setBootLoaderMajor(localGoProProtocolParser.extractUnsignedByte());
+        localBackPack.setBootLoaderMinor(localGoProProtocolParser.extractUnsignedByte());
+        localBackPack.setBootLoaderBuild(localGoProProtocolParser.extractUnsignedByte());
+        localBackPack.setRevision(localGoProProtocolParser.extractUnsignedByte());
+        localBackPack.setMajorversion(localGoProProtocolParser.extractUnsignedByte());
+        localBackPack.setMinorversion(localGoProProtocolParser.extractUnsignedByte());
+        localBackPack.setBuildversion(localGoProProtocolParser.extractUnsignedByte());
+        localBackPack.setWifimac(localGoProProtocolParser.extractFixedLengthString(6));
         localBackPack.setSSID(localGoProProtocolParser.extractString());
         return localBackPack;
     }
@@ -628,6 +729,7 @@ public class GoProHelper {
 
     public String getBacPacPassword() {
         try {
+            Log.i("tag", "Cgbp 1");
             GoProProtocolParser localGoProProtocolParser = new GoProProtocolParser(
                     sendGET(this.mCameraAddress + Operations.BACPAC_SD));
             byte[] arrayOfByte = new byte[1];
@@ -640,6 +742,8 @@ public class GoProHelper {
             }
             return (String) localObject;
         } catch (Exception localException) {
+            Log.i("tag", "Cayo en exception de recuperar contrasenia");
+            localException.printStackTrace();
         }
         return null;
     }
@@ -666,7 +770,7 @@ public class GoProHelper {
         return -1;
     }
 
-    private String getPassword() {
+    public String getPassword() {
         return password;
     }
 
