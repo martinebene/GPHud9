@@ -103,7 +103,7 @@
         android:layout_height="240dp"
         android:id="@+id/videoView"
         android:layout_gravity="center_horizontal"
-        android:background="@android:color/darker_gray" />
+        />
 
     <LinearLayout
         android:orientation="horizontal"

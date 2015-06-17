@@ -124,7 +124,7 @@ public class MyActivity extends Activity {
     }
 
     private void wifiStartUp() {
-
+/*
         // Comprobamos si la wifi está activada o no
         WifiManager wifiMan = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 
@@ -137,25 +137,32 @@ public class MyActivity extends Activity {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     Intent i = new Intent(Settings.ACTION_WIFI_SETTINGS);
-                    /*Log.i("tag", "antes del intent wifi");
+                    Log.i("tag", "antes del intent wifi");
                     startActivity(i);
-                    Log.i("tag", "despues 1 del intent wifi");
-                    try {
+                    //notify();
+                    Log.i("tag", "despues 1000 del intent wifi");
+                    /*try {
                         Thread.sleep(TIEMPO_RECONEXION);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                     Log.i("tag", "despues 2 del intent wifi");
                     wifiStartUp();*/
-                }
+  /*              }
             });
-            dialog.setNegativeButton("Continuar sin conexion", new DialogInterface.OnClickListener() {
+            dialog.setNegativeButton("Cont sin conexion...", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.cancel();
+                    //notify();
                 }
             });
             dialog.show();
+           /* try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
 
@@ -168,7 +175,7 @@ public class MyActivity extends Activity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+*/
             }
 
 

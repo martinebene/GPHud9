@@ -2,8 +2,12 @@ package com.mebene.GPHud;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.MediaPlayer;
+import android.net.Uri;
+import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -13,10 +17,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.MediaController;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
+
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -76,7 +84,7 @@ public class Fm_control extends Fragment {
         else{
             Log.i("tag", "On Resume con hilo vivo");
         }
-
+        playVideo();
     }
 
     @Override
@@ -137,6 +145,12 @@ public class Fm_control extends Fragment {
     private void startUpConexion() {
         Log.i("tag", "Entre a conexion");
         String SsId = null;
+
+        WifiManager wifiMan = (WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE);
+
+        //if (!wifiMan.isWifiEnabled())
+            //aca cambiar el texto del dialogo si no poner otro texto
+
         try {
             SsId = gp_helper.getBackPackInfo().getSSID();
             Log.i("tag", "desopues del getback con SSID:" + SsId);
@@ -224,6 +238,36 @@ public class Fm_control extends Fragment {
         tf_output_console.setText("");
     }
 
+    private void playVideo() {
+        Log.i("tag", "en play video");
+        try {
+            MediaController mediaController = new MediaController(getActivity());
+            mediaController.setAnchorView(videoView);
+            Uri video = Uri.parse("http://10.5.5.9:8080/live/amba.m3u8");
+            videoView.setMediaController(mediaController);
+            videoView.setVideoURI(video);
+            videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                public void onCompletion(MediaPlayer mp) {
+                    mp.stop();
+                    playVideo();
+                }
+            });
+            videoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+                public boolean onError(MediaPlayer mp, int what, int extra) {
+                    return true;
+                }
+            });
+            videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                public void onPrepared(MediaPlayer mp) {
+                    videoView.start();
+                }
+            });
+            Log.i("tag", "saliendo de play video");
+        } catch (Exception e) {
+            System.out.println("Video Play Error :" + e.toString());
+        }
+
+    }
 
     private class AsyncUpdateGUI extends AsyncTask <Object, GoProStatus, Object>{
 
