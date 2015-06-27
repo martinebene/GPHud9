@@ -12,6 +12,7 @@ public enum Operations {
 	 CAMERA_VM ( "/camera/VM"),
 	 CAMERA_LL ( "/camera/LL"),
 	 CAMERA_PV ( "/camera/PV"),
+     CAMERA_PV2 ( "/bacpac/PV"),
 	 CAMERA_LB ( "/camera/LB"),
 	 CAMERA_FV ( "/camera/FV"),
 	 CAMERA_EX ( "/camera/EX"),

@@ -24,6 +24,14 @@ public class GoProStatus {
 
     }
 
+    public boolean isFieldComplete(){
+
+        if(bacPacStatus==null)return false;
+        if(bacPacInfo==null)return false;
+        if(camFields==null)return false;
+        if(password==null)return false;
+        else return true;
+    }
 
     public BackPack getBacPacInfo() {
         return bacPacInfo;

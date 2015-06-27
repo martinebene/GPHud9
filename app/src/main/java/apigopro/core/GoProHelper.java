@@ -122,26 +122,6 @@ public class GoProHelper {
 
     }
 
-/*
-    public boolean isConected() {
-
-        String linea ="";
-
-        try {
-            linea = getBacPacPassword();
-            linea = linea + "   " + getBackPackInfo().getSSID();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        if (res != null){
-            Log.i("tag","Prueba de getpass con res = "+ linea +"\n");
-            return true;
-        }
-        else
-            return false;
-    }
-*/
 
     private byte[] sendGET(final String paramString) {
 
@@ -156,96 +136,15 @@ public class GoProHelper {
         //Arrancamos el Hilo
         thr.start();
 
-        for (int i=1; (res == null)  && (i < TIMEOUT); i=(i+PASO_TIMEOUT)){
-            Log.i("tag","En espera hilo nuevo " + i + " milisegundos\n");
+        for (int i=0; ((res == null)  && (i < TIMEOUT)); i=(i+PASO_TIMEOUT)){
+            Log.i("tag","GPhelper: Esperando " + i + " milisegundos\n");
             try {
                 Thread.sleep(PASO_TIMEOUT);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
         }
-
         return res;
-
-
-
-        /*
-        res = null;
-        new AsynConection().execute(paramString);
-
-        for (int i=1; (res == null)  && (i < TIMEOUT); i=(i+PASO_TIMEOUT)){
-            Log.i("tag","En espera " + i + " milisegundos\n");
-            try {
-                Thread.sleep(PASO_TIMEOUT);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-        }
-
-        return res;
-*/
-/*
-        try {
-        Log.i("tag", "en sendget simple antes de sendget con mClient\n");Thread.sleep(1000);
-
-        //return sendGET(paramString, this.mClient);
-
-        InputStream data = null;
-        Log.i("tag","En sendget 1\n");Thread.sleep(1000);
-        HttpClient client = new DefaultHttpClient();
-        Log.i("tag","En sendget 2\n");Thread.sleep(1000);
-        HttpGet get = new HttpGet(paramString);
-        Log.i("tag","En sendget 3\n");Thread.sleep(1000);
-        try {
-            Log.i("tag","En sendget 4\n");Thread.sleep(1000);
-            HttpResponse response = client.execute(get);
-            Log.i("tag","En sendget 5\n");Thread.sleep(1000);
-            data = response.getEntity().getContent();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        Log.i("tag","En sendget 6\n");Thread.sleep(1000);
-
-        return getBytesFromInputStream(data);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
-*/
-
-       /* Log.i("tag", paramString);
-
-
-        //(new Thread(new Runnable() {
-
-            //@Override
-            //public void run() {
-                try {
-                    URL url = new URL(paramString);
-                    java.net.URLConnection con = url.openConnection();
-                    con.connect();
-                    java.io.BufferedReader in =new java.io.BufferedReader(new java.io.InputStreamReader(con.getInputStream()));
-
-                } catch (MalformedURLException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-
-           // }
-        //})).start();
-
-*/
-      //  return new byte[0];
     }
 
     public byte[] sendGET(String paramString, DefaultHttpClient paramDefaultHttpClient) throws Exception {
@@ -303,11 +202,6 @@ public class GoProHelper {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-/*                if (data == null){
-                    Log.i("tag","En sendget 6 data null\n");}
-                else{
-                    Log.i("tag","En sendget 6 data ok\n");}*/
 
             res = getBytesFromInputStream(data, j);
 
@@ -483,6 +377,49 @@ public class GoProHelper {
         return sendCommand(Operations.BACPAC_PW, "%00");
     }
 
+    public boolean turnOnOff() throws Exception {
+        if(isOn())
+            return turnOnCamera();
+        else
+            return turnOffCamera();
+    }
+
+    public boolean isOn() {
+        /*setCamLivePreview(true);
+        Thread.sleep(500);
+        sendGET("http://10.5.5.9:8080/live/amba.m3u8");
+        Thread.sleep(500);
+        if(res==null)
+            return false;
+        else
+            return true;*/
+
+        BackPack localBp = null;
+
+        try {
+            Log.i("tag", "GPhelper: isOn 1\n");
+
+            int b = -1;
+            //b = getBackPackInfo().getBattery();
+            // if((b == -1) || (b==0)){
+
+            //CamFields lcm = null;
+            b = getCameraSettings().getBattery();
+            if(b == -1){
+                Log.i("tag", "GPhelper: isOn 2: " + b + "\n");
+                return false;}
+            else{
+                Log.i("tag", "GPhelper: isOn 3: " + b + "\n");
+                return true;}
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.i("tag", "GPhelper: isOn por exception\n");
+            return false;
+        }
+
+    }
+
+
     public boolean changeModeCamera() throws Exception {
         return sendCommand(Operations.BACPAC_PW, "%02");
     }
@@ -657,7 +594,7 @@ public class GoProHelper {
         try {
             byte[] arrayOfByte = sendGET("http://" + this.getIpAddress()
                     + Operations.BACPAC_CV);
-            Log.i("tag", "En getBackPackInfo con array lenght:"+ arrayOfByte.length +"\n");
+            Log.i("tag", "GPHelper: getBackPackInfo array lenght:"+ arrayOfByte.length +"\n");
             localGoProProtocolParser = new GoProProtocolParser(arrayOfByte);
             if (localGoProProtocolParser.extractResultCode() != GoProProtocolParser.RESULT_IS_OK) {
                 return null;
@@ -792,6 +729,10 @@ public class GoProHelper {
         return sendCommand(Operations.CAMERA_CM, "%02");
     }
 
+    public boolean modeTimeLapse() throws Exception {
+        return sendCommand(Operations.CAMERA_CM, "%03");
+    }
+
     public boolean setCamVideoResolution(int paramInt) throws Exception {
         return sendCommand(Operations.CAMERA_VR, paramInt);
     }
@@ -813,10 +754,16 @@ public class GoProHelper {
     }
 
     public boolean setCamLivePreview(boolean paramBoolean) throws Exception {
-        if (paramBoolean)
+       /* if (paramBoolean)
             ;
         for (int i = 2;; i = 0)
-            return sendCommand(Operations.CAMERA_PV, i);
+            return sendCommand(Operations.CAMERA_PV, i);*/
+
+        if (paramBoolean)
+            return sendCommand(Operations.CAMERA_PV, "%02");
+        else
+            return sendCommand(Operations.CAMERA_PV, "%00");
+
     }
 
     public boolean setCamLocate(boolean paramBoolean) throws Exception {
