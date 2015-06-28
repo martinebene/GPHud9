@@ -183,6 +183,28 @@ public class BacPacStatus
         mWifiMode = i;
     }
 
+    @Override
+    public String toString() {
+        return "BacPacStatus{" + "\n" +
+                "mAutoPowerOff=" + mAutoPowerOff + "\n" +
+                ", mBOSSReady=" + mBOSSReady + "\n" +
+                ", mBacPacBattery=" + mBacPacBattery + "\n" +
+                ", mBlueToothAudioChannel=" + mBlueToothAudioChannel + "\n" +
+                ", mBlueToothMode=" + mBlueToothMode + "\n" +
+                ", mCameraAttached=" + mCameraAttached + "\n" +
+                ", mCameraI2CError=" + mCameraI2CError + "\n" +
+                ", mCameraModel=" + mCameraModel + "\n" +
+                ", mCameraPower=" + mCameraPower + "\n" +
+                ", mCameraProtocolVersion=" + mCameraProtocolVersion + "\n" +
+                ", mCameraReady=" + mCameraReady + "\n" +
+                ", mFileServer=" + mFileServer + "\n" +
+                ", mRSSI=" + mRSSI + "\n" +
+                ", mShutterStatus=" + mShutterStatus + "\n" +
+                ", mWifiLevel=" + mWifiLevel + "\n" +
+                ", mWifiMode=" + mWifiMode + "\n" +
+                '}';
+    }
+
     private int mAutoPowerOff;
     private int mBOSSReady;
     private int mBacPacBattery;

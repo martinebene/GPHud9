@@ -47,8 +47,12 @@ public class CameraSettings extends HashMap
         put("key_shutter", s);
     }
 
+
+
     public static final String KEY_MODE = "key_mode";
     public static final String KEY_PREVIEW = "key_preview";
     public static final String KEY_SHUTTER = "key_shutter";
     private static final long serialVersionUID = 1L;
+
+
 }

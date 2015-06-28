@@ -56,20 +56,40 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center|end"
-                android:layout_marginRight="@dimen/ic_status_control_margen"
-                android:layout_marginLeft="@dimen/ic_status_control_margen">
+                android:layout_marginLeft="@dimen/ic_status_control_margen"
+                android:layout_marginRight="@dimen/ic_status_control_margen" >
 
                 <ImageView
                     android:layout_width="@dimen/ic_status_control_width"
                     android:layout_height="@dimen/ic_status_control_height"
                     android:id="@+id/imageView3"
-                    android:src="@drawable/ic_signal_camara" />
+                    android:src="@drawable/ic_action_video" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/ex_porcentaje"
-                    android:id="@+id/tV_status_signal"
+                    android:id="@+id/tV_videos_en_camara"
+                    android:textColor="@android:color/holo_blue_light" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center|end"
+                android:layout_marginLeft="@dimen/ic_status_control_margen"
+                android:layout_marginRight="@dimen/ic_status_control_margen" >
+
+                <ImageView
+                    android:layout_width="@dimen/ic_status_control_width"
+                    android:layout_height="@dimen/ic_status_control_height"
+                    android:id="@+id/imageView5"
+                    android:src="@drawable/ic_action_camera" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tV_fotos_en_camara"
                     android:textColor="@android:color/holo_blue_light" />
             </LinearLayout>
 
@@ -98,13 +118,33 @@
 
     </LinearLayout>
 
-    <VideoView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="240dp"
-        android:id="@+id/videoView"
-        android:layout_gravity="center_horizontal"
-        />
+        android:baselineAligned="false"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:gravity="center_vertical|center|center_horizontal"
+        android:textAlignment="center">
+        <VideoView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/videoView"
+            android:layout_gravity="center_horizontal"
+            />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="BUSCAR CONEXION"
+            android:id="@+id/tV_SinConexion"
+            android:visibility="gone"
+            android:textColor="@android:color/holo_blue_light"
+            android:layout_gravity="center"
+            android:textAlignment="center"
+            android:gravity="center" />
+    </LinearLayout>
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
@@ -140,7 +180,8 @@
                     android:clickable="true"
                     android:contentDescription="boton de control grabacion"
                     android:background="@drawable/button_bg_selector"
-                    android:layout_margin="@dimen/ic_control_margen" />
+                    android:layout_margin="@dimen/ic_control_margen"
+                    android:visibility="invisible" />
 
             </TableRow>
         </TableLayout>

@@ -51,16 +51,18 @@ public class Fm_control extends Fragment {
     private Spinner spinner;
     public GoProHelper gp_helper;
     GoProStatus gPStatus;
-    TextView tV_status_conexion, tV_status_bateria, tV_status_signal;
+    TextView tV_status_conexion, tV_status_bateria, tV_sin_conexion,tV_videos_en_camara,tV_fotos_en_camara;
+
+
     EditText tf_output_console;
     VideoView videoView;
     ImageButton ib_rec,ib_stop,ib_OnOff;
 
-
-
     private AsyncUpdateGUI asyncUpdateGUI;
-    boolean conectado, usarSinConexion, CamOn;
+    boolean conectado, usarSinConexion, camOn, adquiriendo;
     String SsId;
+
+    int cameraModeGui;
 
     //provisorios
     public int i=0;
@@ -86,11 +88,13 @@ public class Fm_control extends Fragment {
         super.onActivityCreated(savedInstanceState);
         gp_helper = new GoProHelper("10.5.5.9", 80, "martin123456");
         conectado=false;
-        CamOn=false;
+        camOn=false;
+        adquiriendo = false;
         SsId = null;
         Log.i("tag", "cree helper");
         asyncUpdateGUI = new AsyncUpdateGUI();
         gPStatus= new GoProStatus();
+        cameraModeGui=0;
 
     }
 
@@ -104,7 +108,7 @@ public class Fm_control extends Fragment {
         try {
             if(conectado = startUpConexion()){
                 Log.i("tag2", "On Resume conectado");
-                if(CamOn = gp_helper.isOn()){
+                if(camOn = gp_helper.isOn()){
                     Log.i("tag2", "On Resume conectada y prendida");
                     setGuiConectado(SsId);}
                 else{
@@ -154,8 +158,14 @@ public class Fm_control extends Fragment {
         videoView = (VideoView)getView().findViewById(R.id.videoView);
         tV_status_conexion = (TextView)getView().findViewById(R.id.tV_status_conexion);
         tV_status_bateria = (TextView)getView().findViewById(R.id.tV_status_bateria);
-        tV_status_signal = (TextView)getView().findViewById(R.id.tV_status_signal);
+        tV_sin_conexion = (TextView)getView().findViewById(R.id.tV_SinConexion);
+        tV_videos_en_camara = (TextView)getView().findViewById(R.id.tV_videos_en_camara);
+        tV_fotos_en_camara = (TextView)getView().findViewById(R.id.tV_fotos_en_camara);
+
+
+
         tf_output_console = (EditText)getView().findViewById(R.id.tf_output_console);
+
 
         ib_rec = (ImageButton) getView().findViewById(R.id.ib_rec);
         ib_stop = (ImageButton) getView().findViewById(R.id.ib_stop);
@@ -163,15 +173,39 @@ public class Fm_control extends Fragment {
 
         spinner = (Spinner) getView().findViewById(R.id.spinner_gopro_mod);
 
+
+        tV_sin_conexion.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                startUpConexion();
+            }
+        });
+
         ib_rec.setOnClickListener(new View.OnClickListener()
         {
-            public void onClick(View v)
-            {
-                try {
-                    gp_helper.startRecord();
-                } catch (Exception e) {
-                    setGuiConectado(SsId);
-                    e.printStackTrace();
+            public void onClick(View v) {
+                if (cameraModeGui == CameraMode.CAM_MODE_VIDEO) {
+                    try {
+                        gp_helper.startRecord();
+                        adquiriendo = true;
+                        ib_rec.setEnabled(false);
+                        ib_rec.setVisibility(View.GONE);
+                        ib_stop.setEnabled(true);
+                        ib_stop.setVisibility(View.VISIBLE);
+                        spinner.setEnabled(false);
+                        spinner.setVisibility(View.INVISIBLE);
+                    } catch (Exception e) {
+                        setGuiConectado(SsId);
+                        e.printStackTrace();
+                        adquiriendo = false;
+                    }
+                } else {
+                    try {
+                        gp_helper.startRecord();
+                    } catch (Exception e) {
+                        setGuiConectado(SsId);
+                        e.printStackTrace();
+                        adquiriendo = false;
+                    }
                 }
             }
         });
@@ -182,8 +216,16 @@ public class Fm_control extends Fragment {
             {
                 try {
                     gp_helper.stopRecord();
+                    adquiriendo = false;
+                    ib_rec.setEnabled(true);
+                    ib_rec.setVisibility(View.VISIBLE);
+                    ib_stop.setEnabled(false);
+                    ib_stop.setVisibility(View.GONE);
+                    spinner.setEnabled(true);
+                    spinner.setVisibility(View.VISIBLE);
                 } catch (Exception e) {
                     setGuiConectado(SsId);
+                    adquiriendo = false;
                     e.printStackTrace();
                 }
             }
@@ -199,12 +241,12 @@ public class Fm_control extends Fragment {
                         Log.i("tag", "OnOff button con cam apagada");
                         gp_helper.turnOnCamera();
                         setGuiConectado(SsId);
-
                     }
                     else {
                         Log.i("tag", "OnOff button con cam encendida");
                         asyncUpdateGUI.cancel(true);
                         gp_helper.turnOffCamera();
+                        adquiriendo=false;
                         setGuiApagado(SsId);
                     }
                 } catch (Exception e) {
@@ -224,6 +266,10 @@ public class Fm_control extends Fragment {
     private void setGuiDesconectado() {
         Log.i("tag", "Entre a setGuiDesconectado");
         Toast.makeText(getView().getContext(), "Sin conexion", Toast.LENGTH_SHORT).show();
+        tV_sin_conexion.setText("Buscar Conexion");
+        tV_sin_conexion.setEnabled(true);
+        tV_sin_conexion.setVisibility(View.VISIBLE);
+        videoView.setVisibility(View.GONE);
         spinner.setEnabled(false);
         spinner.setVisibility(View.INVISIBLE);
         ib_rec.setEnabled(false);
@@ -234,9 +280,11 @@ public class Fm_control extends Fragment {
         ib_OnOff.setVisibility(View.INVISIBLE);
         tV_status_conexion.setText("Sin conexion");
         tV_status_bateria.setText(R.string.ex_porcentaje);
-        tV_status_signal.setText(R.string.ex_porcentaje);
+        tV_videos_en_camara.setText("");
+        tV_fotos_en_camara.setText("");
         limpiarConsola();
         stopVideo();
+        adquiriendo=false;
     }
 
 
@@ -244,12 +292,16 @@ public class Fm_control extends Fragment {
     private void setGuiConectado(String localSsId) {
         Log.i("tag", "Entre a setGuiConectado");
         Toast.makeText(getView().getContext(), "conectada y encendida", Toast.LENGTH_SHORT).show();
+        tV_sin_conexion.setText("");
+        tV_sin_conexion.setEnabled(false);
+        tV_sin_conexion.setVisibility(View.GONE);
+        videoView.setVisibility(View.VISIBLE);
         spinner.setEnabled(true);
         spinner.setVisibility(View.VISIBLE);
         ib_rec.setEnabled(true);
         ib_rec.setVisibility(View.VISIBLE);
-        ib_stop.setEnabled(true);
-        ib_stop.setVisibility(View.VISIBLE);
+        //ib_stop.setEnabled(true);
+        //ib_stop.setVisibility(View.VISIBLE);
         ib_OnOff.setEnabled(true);
         ib_OnOff.setVisibility(View.VISIBLE);
         tV_status_conexion.setText(localSsId);
@@ -269,11 +321,21 @@ public class Fm_control extends Fragment {
 
                 localGpMode = (GoproMode) adapterView.getItemAtPosition(position);
                 Toast.makeText(adapterView.getContext(), (localGpMode.getNombre()), Toast.LENGTH_SHORT).show();
-                switch (localGpMode.getCodeMode()) {
+                switch (cameraModeGui = localGpMode.getCodeMode()) {
                     case (CameraMode.CAM_MODE_VIDEO):
                         try {
                             stopVideo();
                             gp_helper.modeCamera();
+                            if(adquiriendo){
+                                ib_rec.setEnabled(false);
+                                ib_rec.setVisibility(View.GONE);
+                                ib_stop.setEnabled(true);
+                                ib_stop.setVisibility(View.VISIBLE);}
+                            else {
+                                ib_rec.setEnabled(true);
+                                ib_rec.setVisibility(View.VISIBLE);
+                                ib_stop.setEnabled(false);
+                                ib_stop.setVisibility(View.GONE);}
                             //Thread.sleep(1000);
                             playVideo();
                         } catch (Exception e) {
@@ -284,6 +346,8 @@ public class Fm_control extends Fragment {
                         try {
                             stopVideo();
                             gp_helper.modePhoto();
+                            ib_stop.setEnabled(false);
+                            ib_stop.setVisibility(View.INVISIBLE);
                             //Thread.sleep(1000);
                             playVideo();
                         } catch (Exception e) {
@@ -294,6 +358,8 @@ public class Fm_control extends Fragment {
                         try {
                             stopVideo();
                             gp_helper.modeBurst();
+                            ib_stop.setEnabled(false);
+                            ib_stop.setVisibility(View.INVISIBLE);
                             //Thread.sleep(1000);
                             playVideo();
                         } catch (Exception e) {
@@ -305,6 +371,8 @@ public class Fm_control extends Fragment {
                             stopVideo();
                             Thread.sleep(1000);
                             gp_helper.modeTimeLapse();
+                            ib_stop.setEnabled(false);
+                            ib_stop.setVisibility(View.INVISIBLE);
                             playVideo();
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -339,6 +407,10 @@ public class Fm_control extends Fragment {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        tV_sin_conexion.setText("Camara Apagada");
+        tV_sin_conexion.setEnabled(false);
+        tV_sin_conexion.setVisibility(View.VISIBLE);
+        videoView.setVisibility(View.GONE);
         spinner.setEnabled(false);
         spinner.setVisibility(View.INVISIBLE);
         ib_rec.setEnabled(false);
@@ -348,9 +420,11 @@ public class Fm_control extends Fragment {
         ib_OnOff.setEnabled(true);
         tV_status_conexion.setText(localSsId);
         tV_status_bateria.setText(R.string.ex_porcentaje);
-        tV_status_signal.setText(R.string.ex_porcentaje);
+        tV_videos_en_camara.setText("");
+        tV_fotos_en_camara.setText("");
         limpiarConsola();
         stopVideo();
+        adquiriendo=false;
     }
 
 
@@ -369,6 +443,13 @@ public class Fm_control extends Fragment {
             TituloDialog="Sin Conexion a Camara";
             textoDialog = "El dispositivo movil no se encuentra conectado a una camara GoPro compatible";
             textoPositive = "Buscar Camara WiFi";
+            try {
+                SsId = gp_helper.getBackPackInfo().getSSID();
+                Log.i("tag", "desopues de StartUp Conexion con SSID:" + SsId);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         }else{
             TituloDialog="WiFi desactivado";
             textoDialog="No se encuentra activa la conexion WiFi";
@@ -376,40 +457,34 @@ public class Fm_control extends Fragment {
         }
         textoNegative="Continuar sin conexion";
 
-        try {
-            SsId = gp_helper.getBackPackInfo().getSSID();
-            Log.i("tag", "desopues del getback con SSID:" + SsId);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (SsId == null){
+            conectado=false;
+            Log.i("tag", "entro por ssid null");
+            tV_status_conexion.setText("Sin Conexion");//R.string.status_sinconexion);
+            AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
+            dialog.setTitle(TituloDialog);
+            dialog.setMessage(textoDialog);
+            dialog.setCancelable(false);
+            dialog.setPositiveButton(textoPositive, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent i = new Intent(Settings.ACTION_WIFI_SETTINGS);
+                    startActivity(i);
+                }
+            });
+            dialog.setNegativeButton(textoNegative, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    setGuiDesconectado();
+                    dialog.cancel();
+                }
+            });
+            dialog.show();
+            return false;
         }
-            if (SsId == null){
-                conectado=false;
-                Log.i("tag", "entro por ssid null");
-                tV_status_conexion.setText("Sin Conexion");//R.string.status_sinconexion);
-                AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
-                dialog.setTitle(TituloDialog);
-                dialog.setMessage(textoDialog);
-                dialog.setCancelable(false);
-                dialog.setPositiveButton(textoPositive, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent i = new Intent(Settings.ACTION_WIFI_SETTINGS);
-                        startActivity(i);
-                    }
-                });
-                dialog.setNegativeButton(textoNegative, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        setGuiDesconectado();
-                        dialog.cancel();
-                    }
-                });
-                dialog.show();
-                return false;
-            }
-            else{
-                return true;
-            }
+        else{
+            return true;
+        }
     }
 
 
@@ -442,10 +517,11 @@ public class Fm_control extends Fragment {
         try {
             gp_helper.setCamLivePreview(true);
             videoView.setBackgroundResource(0);
-            MediaController mediaController = new MediaController(getActivity());
-            mediaController.setAnchorView(videoView);
+            //MediaController mediaController = new MediaController(getActivity());
+            //mediaController.setAnchorView(videoView);
             Uri video = Uri.parse("http://10.5.5.9:8080/live/amba.m3u8");
-            videoView.setMediaController(mediaController);
+            //videoView.setMediaController(mediaController);
+            videoView.setMediaController(null);
             videoView.setVideoURI(video);
             videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 public void onCompletion(MediaPlayer mp) {
@@ -520,7 +596,10 @@ public class Fm_control extends Fragment {
                     local_gPStatus.setBacPacStatus(local_gp_helper.getBacpacStatus());
                     local_gPStatus.setBacPacInfo(local_gp_helper.getBackPackInfo());
                     local_gPStatus.setCamFields(local_gp_helper.getCameraSettings());
+                    local_gPStatus.setCameraSettingsExtended(local_gp_helper.getCameraSettingsExtended());
+                    local_gPStatus.setCameraInfo(local_gp_helper.getCameraInfo());
                     local_gPStatus.setPassword(local_gp_helper.getPassword());
+                    local_gPStatus.setCname(local_gp_helper.getCameraNameCN());
 
                     if(local_gPStatus.isFieldComplete()){
                         publishProgress(local_gPStatus);
@@ -550,10 +629,12 @@ public class Fm_control extends Fragment {
 
             tV_status_conexion.setText(local_gPStatus[0].getBacPacInfo().getSSID());
             tV_status_bateria.setText(Integer.toString(local_gPStatus[0].getCamFields().getBattery()));
-            tV_status_signal.setText(local_gPStatus[0].getBacPacInfo().getSignal());
+            tV_videos_en_camara.setText(Long.toString(local_gPStatus[0].getCamFields().getVideoOncard()));
+            tV_fotos_en_camara.setText(Long.toString(local_gPStatus[0].getCamFields().getPhotosOncard()));
 
             limpiarConsola();
 
+            /*
             agregarTextoAConsola(
                     "CamFields:\n" +
                             "Cname: " + local_gPStatus[0].getCamFields().getCamname() + "\n" +
@@ -571,6 +652,12 @@ public class Fm_control extends Fragment {
                             "Video On Card: " + local_gPStatus[0].getCamFields().getVideoOncard() + "\n" +
                             "Photos On Card: " + local_gPStatus[0].getCamFields().getPhotosOncard() + "\n"
             );
+*/
+          //  agregarTextoAConsola("\n" + local_gPStatus[0].getCamFields().toString());
+            //agregarTextoAConsola("\n" + local_gPStatus[0].getBacPacInfo().toString());
+            //agregarTextoAConsola("\n" + );
+            agregarTextoAConsola(local_gPStatus[0].toString());
+            Log.i("tag1", "Info que traigo: \n" + local_gPStatus[0].toString());
 
         }
 

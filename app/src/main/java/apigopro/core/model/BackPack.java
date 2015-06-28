@@ -32,6 +32,40 @@ public class BackPack
         sdrcname = "";
     }
 
+    @Override
+    public String toString() {
+        return "BackPack{" + "\n" +
+                "autooff=" + autooff + "\n" +
+                ", battery=" + battery + "\n" +
+                ", bluetooth=" + bluetooth + "\n" +
+                ", buildversion=" + buildversion + "\n" +
+                ", encryption=" + encryption + "\n" +
+                ", gps='" + gps + '\'' + "\n" +
+                ", id='" + id + '\'' + "\n" +
+                ", ip='" + ip + '\'' + "\n" +
+                ", mBootLoaderBuild=" + mBootLoaderBuild + "\n" +
+                ", mBootLoaderMajor=" + mBootLoaderMajor + "\n" +
+                ", mBootLoaderMinor=" + mBootLoaderMinor + "\n" +
+                ", mRevision=" + mRevision + "\n" +
+                ", majorversion=" + majorversion + "\n" +
+                ", minorversion=" + minorversion + "\n" +
+                ", model=" + model + "\n" +
+                ", name='" + name + '\'' + "\n" +
+                ", networktype=" + networktype + "\n" +
+                ", notices='" + notices + '\'' + "\n" +
+                ", pair='" + pair + '\'' + "\n" +
+                ", pass=" + pass + "\n" +
+                ", power=" + power + "\n" +
+                ", rev='" + rev + '\'' + "\n" +
+                ", sdrcname='" + sdrcname + '\'' + "\n" +
+                ", signal='" + signal + '\'' + "\n" +
+                ", ssid='" + ssid + '\'' + "\n" +
+                ", version=" + version + "\n" +
+                ", wifi='" + wifi + '\'' + "\n" +
+                ", wifimode=" + wifimode + "\n" +
+                '}';
+    }
+
     public int getAutooff()
     {
         return autooff;

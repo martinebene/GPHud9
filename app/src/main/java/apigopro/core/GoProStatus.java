@@ -14,6 +14,46 @@ public class GoProStatus {
     public BackPack bacPacInfo;
     public CamFields camFields;
     public String password;
+    public String cname;
+    public CamFields cameraInfo;
+    public CamFields cameraSettingsExtended;
+
+    @Override
+    public String toString() {
+        return "GoProStatus{" + "\n" +
+                "bacPacStatus=" + bacPacStatus + "\n" + "\n" +
+                ", bacPacInfo=" + bacPacInfo + "\n" + "\n" +
+                ", camFields=" + camFields + "\n" + "\n" +
+                ", password='" + password + '\'' + "\n" + "\n" +
+                ", cname='" + cname + '\'' + "\n" + "\n" +
+                ", cameraInfo=" + cameraInfo + "\n" + "\n" +
+                ", cameraSettingsExtended=" + cameraSettingsExtended + "\n" + "\n" +
+                '}';
+    }
+
+    public String getCname() {
+        return cname;
+    }
+
+    public void setCname(String cname) {
+        this.cname = cname;
+    }
+
+    public CamFields getCameraInfo() {
+        return cameraInfo;
+    }
+
+    public void setCameraInfo(CamFields cameraInfo) {
+        this.cameraInfo = cameraInfo;
+    }
+
+    public CamFields getCameraSettingsExtended() {
+        return cameraSettingsExtended;
+    }
+
+    public void setCameraSettingsExtended(CamFields cameraSettingsExtended) {
+        this.cameraSettingsExtended = cameraSettingsExtended;
+    }
 
     public  GoProStatus() {
 
