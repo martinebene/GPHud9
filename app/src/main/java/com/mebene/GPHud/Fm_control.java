@@ -5,6 +5,10 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
@@ -46,7 +50,7 @@ import apigopro.core.GoProStatus;
 import apigopro.core.model.CamFields;
 
 
-public class Fm_control extends Fragment {
+public class Fm_control extends Fragment implements SensorEventListener {
 
     private static final long TIEMPO_RECONEXION = 5000;
     private static final long INTERVALO_ACTUALIZACION_UI = 2000;
@@ -98,6 +102,21 @@ public class Fm_control extends Fragment {
         asyncUpdateGUI = new AsyncUpdateGUI();
         gPStatus= new GoProStatus();
         cameraModeGui=0;
+
+
+
+            SensorManager sensorManager = (SensorManager)getActivity().getSystemService(Context.SENSOR_SERVICE);
+            List<Sensor> listaSensores = sensorManager.
+                    getSensorList(Sensor.TYPE_ALL);
+            for(Sensor sensor: listaSensores) {
+                Log.i("tag", sensor.getName());
+            }
+
+
+
+
+
+
 
     }
 
@@ -185,8 +204,7 @@ public class Fm_control extends Fragment {
             }
         });
 
-        ib_rec.setOnClickListener(new View.OnClickListener()
-        {
+        ib_rec.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (cameraModeGui == CameraMode.CAM_MODE_VIDEO) {
                     try {
@@ -215,10 +233,8 @@ public class Fm_control extends Fragment {
             }
         });
 
-        ib_stop.setOnClickListener(new View.OnClickListener()
-        {
-            public void onClick(View v)
-            {
+        ib_stop.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
                 try {
                     gp_helper.stopRecord();
                     adquiriendo = false;
@@ -236,22 +252,19 @@ public class Fm_control extends Fragment {
             }
         });
 
-        ib_OnOff.setOnClickListener(new View.OnClickListener()
-        {
-            public void onClick(View v)
-            {
+        ib_OnOff.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
                 //si enciendo buscar como volver al onResume para lanzar async y guiconectado
                 try {
-                    if((!gp_helper.isOn())) {
+                    if ((!gp_helper.isOn())) {
                         Log.i("tag", "OnOff button con cam apagada");
                         gp_helper.turnOnCamera();
                         setGuiConectado(SsId);
-                    }
-                    else {
+                    } else {
                         Log.i("tag", "OnOff button con cam encendida");
                         asyncUpdateGUI.cancel(true);
                         gp_helper.turnOffCamera();
-                        adquiriendo=false;
+                        adquiriendo = false;
                         setGuiApagado(SsId);
                     }
                 } catch (Exception e) {
@@ -579,6 +592,54 @@ public class Fm_control extends Fragment {
             e.printStackTrace();
         }
     }
+
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //**********************************************************************************************************************//
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public void onSensorChanged(SensorEvent evento) {
+
+        synchronized (this) {
+            switch(evento.sensor.getType()) {
+                case Sensor.TYPE_ORIENTATION:
+                    for (int i=0 ; i<3 ; i++) {
+                        Log.i("Sensor", "Orientación "+i+": "+evento.values[i]);
+                    }
+                    break;
+                case Sensor.TYPE_ACCELEROMETER:
+                    for (int i=0 ; i<3 ; i++) {
+                        Log.i("Sensor","Acelerómetro "+i+": "+evento.values[i]);
+                    }
+                    break;
+                case Sensor.TYPE_MAGNETIC_FIELD:
+                    for (int i=0 ; i<3 ; i++) {
+                        Log.i("Sensor","Magnetismo "+i+": "+evento.values[i]);
+                    }
+                    break;
+                default:
+                    for (int i=0 ; i<evento.values.length ; i++) {
+                        Log.i("Sensor","Temperatura "+i+": "+evento.values[i]);
+                    }
+            }
+        }
+
+
+
+    }
+
+
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+        return;
+    }
+
+
+
+
+
 
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
