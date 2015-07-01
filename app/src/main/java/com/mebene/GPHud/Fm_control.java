@@ -11,6 +11,7 @@ import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -52,6 +54,7 @@ public class Fm_control extends Fragment {
     public GoProHelper gp_helper;
     GoProStatus gPStatus;
     TextView tV_status_conexion, tV_status_bateria, tV_sin_conexion,tV_videos_en_camara,tV_fotos_en_camara;
+    LinearLayout LOsb_gps, LOsb_videosEnCamara, LOsb_fotosEnCamara, LOsd_bateriaCamara;
 
 
     EditText tf_output_console;
@@ -162,10 +165,12 @@ public class Fm_control extends Fragment {
         tV_videos_en_camara = (TextView)getView().findViewById(R.id.tV_videos_en_camara);
         tV_fotos_en_camara = (TextView)getView().findViewById(R.id.tV_fotos_en_camara);
 
-
-
         tf_output_console = (EditText)getView().findViewById(R.id.tf_output_console);
 
+        LOsb_gps = (LinearLayout)getView().findViewById(R.id.LOsb_gps);
+        LOsb_videosEnCamara = (LinearLayout)getView().findViewById(R.id.LOsb_videosEnCamara);
+        LOsb_fotosEnCamara = (LinearLayout)getView().findViewById(R.id.LOsb_fotosEnCamara);
+        LOsd_bateriaCamara = (LinearLayout)getView().findViewById(R.id.LOsd_bateriaCamara);
 
         ib_rec = (ImageButton) getView().findViewById(R.id.ib_rec);
         ib_stop = (ImageButton) getView().findViewById(R.id.ib_stop);
@@ -279,9 +284,12 @@ public class Fm_control extends Fragment {
         ib_OnOff.setEnabled(false);
         ib_OnOff.setVisibility(View.INVISIBLE);
         tV_status_conexion.setText("Sin conexion");
-        tV_status_bateria.setText(R.string.ex_porcentaje);
+        LOsb_videosEnCamara.setVisibility(View.GONE);
         tV_videos_en_camara.setText("");
+        LOsb_fotosEnCamara.setVisibility(View.GONE);
         tV_fotos_en_camara.setText("");
+        LOsd_bateriaCamara.setVisibility(View.GONE);
+        tV_status_bateria.setText("");
         limpiarConsola();
         stopVideo();
         adquiriendo=false;
@@ -300,11 +308,12 @@ public class Fm_control extends Fragment {
         spinner.setVisibility(View.VISIBLE);
         ib_rec.setEnabled(true);
         ib_rec.setVisibility(View.VISIBLE);
-        //ib_stop.setEnabled(true);
-        //ib_stop.setVisibility(View.VISIBLE);
         ib_OnOff.setEnabled(true);
         ib_OnOff.setVisibility(View.VISIBLE);
         tV_status_conexion.setText(localSsId);
+        LOsb_videosEnCamara.setVisibility(View.VISIBLE);
+        LOsb_fotosEnCamara.setVisibility(View.VISIBLE);
+        LOsd_bateriaCamara.setVisibility(View.VISIBLE);
 
         List<GoproMode> items = new ArrayList<GoproMode>(4);
         items.add(new GoproMode(getString(R.string.gpMode_video), R.drawable.ic_action_video, CameraMode.CAM_MODE_VIDEO));
@@ -419,9 +428,12 @@ public class Fm_control extends Fragment {
         ib_stop.setVisibility(View.INVISIBLE);
         ib_OnOff.setEnabled(true);
         tV_status_conexion.setText(localSsId);
-        tV_status_bateria.setText(R.string.ex_porcentaje);
+        LOsb_videosEnCamara.setVisibility(View.GONE);
         tV_videos_en_camara.setText("");
+        LOsb_fotosEnCamara.setVisibility(View.GONE);
         tV_fotos_en_camara.setText("");
+        LOsd_bateriaCamara.setVisibility(View.GONE);
+        tV_status_bateria.setText("");
         limpiarConsola();
         stopVideo();
         adquiriendo=false;
