@@ -56,6 +56,7 @@ public class Fm_control extends Fragment implements SensorEventListener {
     private static final long INTERVALO_ACTUALIZACION_UI = 2000;
     private Spinner spinner;
     public GoProHelper gp_helper;
+    private SensorManager sensorManager;
     GoProStatus gPStatus;
     TextView tV_status_conexion, tV_status_bateria, tV_sin_conexion,tV_videos_en_camara,tV_fotos_en_camara;
     LinearLayout LOsb_gps, LOsb_videosEnCamara, LOsb_fotosEnCamara, LOsd_bateriaCamara;
@@ -102,10 +103,8 @@ public class Fm_control extends Fragment implements SensorEventListener {
         asyncUpdateGUI = new AsyncUpdateGUI();
         gPStatus= new GoProStatus();
         cameraModeGui=0;
+        sensorManager = (SensorManager)getActivity().getSystemService(Context.SENSOR_SERVICE);
 
-
-
-            SensorManager sensorManager = (SensorManager)getActivity().getSystemService(Context.SENSOR_SERVICE);
             List<Sensor> listaSensores = sensorManager.
                     getSensorList(Sensor.TYPE_ALL);
             for(Sensor sensor: listaSensores) {
@@ -118,14 +117,28 @@ public class Fm_control extends Fragment implements SensorEventListener {
 
 
 
-    }
+
+        }
 
     //**********************************************************************************************************************//
     @Override
     public void onResume () {
         super.onResume();
         setGui();
-        Log.i("tag", "On Resume con hilo muerto");
+        Log.i("tag", "On Resume");
+
+        // Cada sensor se registra por separado
+        List<Sensor> listSensors = sensorManager.getSensorList(Sensor.TYPE_MAGNETIC_FIELD);
+        Sensor orientationSensor = listSensors.get(0);
+        sensorManager.registerListener(this, orientationSensor, SensorManager.SENSOR_DELAY_UI);
+
+        listSensors = sensorManager.getSensorList(Sensor.TYPE_ACCELEROMETER);
+        Sensor acelerometerSensor = listSensors.get(0);
+        sensorManager.registerListener(this, acelerometerSensor, SensorManager.SENSOR_DELAY_UI);
+
+        listSensors = sensorManager.getSensorList(Sensor.TYPE_ORIENTATION);
+        Sensor temperatureSensor = listSensors.get(0);
+        sensorManager.registerListener(this, temperatureSensor, SensorManager.SENSOR_DELAY_UI);
 
         try {
             if(conectado = startUpConexion()){
@@ -601,26 +614,28 @@ public class Fm_control extends Fragment implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent evento) {
 
+        Log.i("tag", "entro a sensor changed");
+
         synchronized (this) {
             switch(evento.sensor.getType()) {
                 case Sensor.TYPE_ORIENTATION:
                     for (int i=0 ; i<3 ; i++) {
-                        Log.i("Sensor", "Orientación "+i+": "+evento.values[i]);
+                        Log.i("Sen", "Orientación "+i+": "+evento.values[i]);
                     }
                     break;
                 case Sensor.TYPE_ACCELEROMETER:
                     for (int i=0 ; i<3 ; i++) {
-                        Log.i("Sensor","Acelerómetro "+i+": "+evento.values[i]);
+                        Log.i("Sen","Acelerómetro "+i+": "+evento.values[i]);
                     }
                     break;
                 case Sensor.TYPE_MAGNETIC_FIELD:
                     for (int i=0 ; i<3 ; i++) {
-                        Log.i("Sensor","Magnetismo "+i+": "+evento.values[i]);
+                        Log.i("Sen","Magnetismo "+i+": "+evento.values[i]);
                     }
                     break;
                 default:
                     for (int i=0 ; i<evento.values.length ; i++) {
-                        Log.i("Sensor","Temperatura "+i+": "+evento.values[i]);
+                        Log.i("Sen","Temperatura "+i+": "+evento.values[i]);
                     }
             }
         }
